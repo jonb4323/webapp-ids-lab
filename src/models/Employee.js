@@ -1,0 +1,71 @@
+const pool = require('../utils/db');
+
+class Employee {
+  static async findAll() {
+    try {
+      const connection = await pool.getConnection();
+      const [rows] = await connection.query('SELECT * FROM employees');
+      connection.release();
+      return rows;
+    } catch (error) {
+      console.error('Error finding all employees:', error);
+      throw error;
+    }
+  }
+
+  static async findById(id) {
+    try {
+      const connection = await pool.getConnection();
+      const [rows] = await connection.query('SELECT * FROM employees WHERE id = ?', [id]);
+      connection.release();
+      return rows[0];
+    } catch (error) {
+      console.error('Error finding employee by id:', error);
+      throw error;
+    }
+  }
+
+  static async create(employee) {
+    try {
+      const connection = await pool.getConnection();
+      const [result] = await connection.query(
+        'INSERT INTO employees (name, email, position, department) VALUES (?, ?, ?, ?)',
+        [employee.name, employee.email, employee.position, employee.department]
+      );
+      connection.release();
+      return result;
+    } catch (error) {
+      console.error('Error creating employee:', error);
+      throw error;
+    }
+  }
+
+  static async update(id, employee) {
+    try {
+      const connection = await pool.getConnection();
+      const [result] = await connection.query(
+        'UPDATE employees SET name = ?, email = ?, position = ?, department = ? WHERE id = ?',
+        [employee.name, employee.email, employee.position, employee.department, id]
+      );
+      connection.release();
+      return result;
+    } catch (error) {
+      console.error('Error updating employee:', error);
+      throw error;
+    }
+  }
+
+  static async delete(id) {
+    try {
+      const connection = await pool.getConnection();
+      const [result] = await connection.query('DELETE FROM employees WHERE id = ?', [id]);
+      connection.release();
+      return result;
+    } catch (error) {
+      console.error('Error deleting employee:', error);
+      throw error;
+    }
+  }
+}
+
+module.exports = Employee;

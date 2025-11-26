@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Web App IDS</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="dashboard">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h1>Employee Dashboard</h1>
+        <button class="btn" onclick="logout()">Logout</button>
+      </div>
+
+      <div class="btn-group">
+        <a href="/employee-list.html" class="btn">View Employees</a>
+        <button class="btn" onclick="document.getElementById('createModal').style.display='block'">Add Employee</button>
+      </div>
+
+      <div id="employees-list"></div>
+    </div>
+  </div>
+
+  <!-- Create Employee Modal -->
+  <div id="createModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="document.getElementById('createModal').style.display='none'">&times;</span>
+      <h2>Add New Employee</h2>
+      <form id="employee-form" onsubmit="createEmployee(event)">
+        <div class="form-group">
+          <label for="employee-name">Name</label>
+          <input type="text" id="employee-name" name="name" required>
+        </div>
+        <div class="form-group">
+          <label for="employee-email">Email</label>
+          <input type="email" id="employee-email" name="email" required>
+        </div>
+        <div class="form-group">
+          <label for="employee-position">Position</label>
+          <input type="text" id="employee-position" name="position" required>
+        </div>
+        <div class="form-group">
+          <label for="employee-department">Department</label>
+          <input type="text" id="employee-department" name="department" required>
+        </div>
+        <button type="submit" class="btn">Create Employee</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="/script.js"></script>
+</body>
+</html>

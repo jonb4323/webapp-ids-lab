@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employees - Web App IDS</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="dashboard">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h1>Employee List</h1>
+        <div>
+          <a href="/dashboard" class="btn" style="display: inline-block; width: auto; padding: 10px 20px;">Back to Dashboard</a>
+          <button class="btn" onclick="logout()" style="display: inline-block; width: auto; padding: 10px 20px; margin-left: 10px;">Logout</button>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Position</th>
+            <th>Department</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="employees-tbody">
+          <tr>
+            <td colspan="6" style="text-align: center;">Loading...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="/script.js"></script>
+</body>
+</html>

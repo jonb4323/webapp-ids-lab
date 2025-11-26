@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Employee - Web App IDS</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="form-container">
+      <h1>Edit Employee</h1>
+      <form id="edit-employee-form" onsubmit="updateEmployee(event)">
+        <div class="form-group">
+          <label for="edit-employee-name">Name</label>
+          <input type="text" id="edit-employee-name" name="name" required>
+        </div>
+        <div class="form-group">
+          <label for="edit-employee-email">Email</label>
+          <input type="email" id="edit-employee-email" name="email" required>
+        </div>
+        <div class="form-group">
+          <label for="edit-employee-position">Position</label>
+          <input type="text" id="edit-employee-position" name="position" required>
+        </div>
+        <div class="form-group">
+          <label for="edit-employee-department">Department</label>
+          <input type="text" id="edit-employee-department" name="department" required>
+        </div>
+        <button type="submit" class="btn">Update Employee</button>
+        <a href="/employee-list.html" class="btn btn-secondary">Cancel</a>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const employeeId = urlParams.get('id');
+
+    async function loadEmployee() {
+      const token = localStorage.getItem('token');
+
+      try {
+        const response = await fetch(`/api/employees/${employeeId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch employee');
+        }
+
+        const employee = await response.json();
+        document.getElementById('edit-employee-name').value = employee.name;
+        document.getElementById('edit-employee-email').value = employee.email;
+        document.getElementById('edit-employee-position').value = employee.position;
+        document.getElementById('edit-employee-department').value = employee.department;
+      } catch (error) {
+        console.error('Error loading employee:', error);
+        showAlert('Error loading employee', 'error');
+      }
+    }
+
+    async function updateEmployee(event) {
+      event.preventDefault();
+
+      const name = document.getElementById('edit-employee-name').value;
+      const email = document.getElementById('edit-employee-email').value;
+      const position = document.getElementById('edit-employee-position').value;
+      const department = document.getElementById('edit-employee-department').value;
+      const token = localStorage.getItem('token');
+
+      try {
+        const response = await fetch(`/api/employees/${employeeId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ name, email, position, department })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          showAlert('Employee updated successfully!', 'success');
+          setTimeout(() => window.location.href = '/employee-list.html', 2000);
+        } else {
+          showAlert(data.message || 'Error updating employee', 'error');
+        }
+      } catch (error) {
+        console.error('Error updating employee:', error);
+        showAlert('An error occurred', 'error');
+      }
+    }
+
+    function showAlert(message, type) {
+      const alertDiv = document.createElement('div');
+      alertDiv.className = `alert alert-${type}`;
+      alertDiv.textContent = message;
+      
+      const container = document.querySelector('.container');
+      container.insertBefore(alertDiv, container.firstChild);
+
+      setTimeout(() => alertDiv.remove(), 3000);
+    }
+
+    document.addEventListener('DOMContentLoaded', loadEmployee);
+  </script>
+</body>
+</html>
