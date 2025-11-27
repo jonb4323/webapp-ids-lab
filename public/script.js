@@ -1,7 +1,7 @@
 // Authentication functions
 async function registerUser(event) {
   event.preventDefault();
-  
+
   const email = document.getElementById('register-email').value;
   const password = document.getElementById('register-password').value;
   const confirmPassword = document.getElementById('register-confirm-password').value;
@@ -20,9 +20,7 @@ async function registerUser(event) {
     if (response.ok) {
       showAlert('Registration successful! Please login.', 'success');
       setTimeout(() => window.location.href = '/login.html', 2000);
-    } else {
-      showAlert(data.message || 'Registration failed', 'error');
-    }
+    } else { showAlert(data.message || 'Registration failed', 'error'); }
   } catch (error) {
     console.error('Registration error:', error);
     showAlert('An error occurred during registration', 'error');
@@ -31,7 +29,7 @@ async function registerUser(event) {
 
 async function loginUser(event) {
   event.preventDefault();
-  
+
   const email = document.getElementById('login-email').value;
   const password = document.getElementById('login-password').value;
 
@@ -85,9 +83,9 @@ async function loadEmployees() {
 
 function displayEmployees(employees) {
   const tbody = document.getElementById('employees-tbody');
-  
+
   if (!tbody) return;
-  
+
   tbody.innerHTML = '';
 
   employees.forEach(employee => {
@@ -109,7 +107,7 @@ function displayEmployees(employees) {
 
 async function createEmployee(event) {
   event.preventDefault();
-  
+
   const name = document.getElementById('employee-name').value;
   const email = document.getElementById('employee-email').value;
   const position = document.getElementById('employee-position').value;
@@ -190,7 +188,7 @@ function showAlert(message, type) {
   const alertDiv = document.createElement('div');
   alertDiv.className = `alert alert-${type}`;
   alertDiv.textContent = message;
-  
+
   const container = document.querySelector('.container') || document.body;
   container.insertBefore(alertDiv, container.firstChild);
 
@@ -200,7 +198,7 @@ function showAlert(message, type) {
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
   const path = window.location.pathname;
-  
+
   if (path === '/dashboard') {
     loadEmployees();
   }
