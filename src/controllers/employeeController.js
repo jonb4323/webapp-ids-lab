@@ -2,7 +2,13 @@ const Employee = require('../models/Employee');
 
 exports.getAllEmployees = async (req, res) => {
   try {
-    const employees = await Employee.findAll();
+    // Check user role - admins see all, users see only their own
+    let employees;
+    if (req.user.role === 'admin') {
+      employees = await Employee.findAll();
+    } else {
+      employees = await Employee.findByUser(req.user.id);
+    }
     res.json(employees);
   } catch (error) {
     console.error('Error fetching employees:', error);
@@ -16,6 +22,11 @@ exports.getEmployeeById = async (req, res) => {
     const employee = await Employee.findById(id);
     if (!employee) { return res.status(404).json({ message: 'Employee not found' }); }
     
+    // Check if user has permission to view this employee
+    if (req.user.role !== 'admin' && employee.created_by !== req.user.id) {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+    
     res.json(employee);
   } catch (error) {
     console.error('Error fetching employee:', error);
@@ -28,7 +39,13 @@ exports.createEmployee = async (req, res) => {
     const { name, email, position, department } = req.body;
     if (!name || !email || !position || !department) { return res.status(400).json({ message: 'All fields are required' }); }
 
-    const result = await Employee.create({ name, email, position, department });
+    const result = await Employee.create({ 
+      name, 
+      email, 
+      position, 
+      department,
+      created_by: req.user.id 
+    });
     res.status(201).json({ message: 'Employee created successfully', employeeId: result.insertId });
   } catch (error) {
     console.error('Error creating employee:', error);

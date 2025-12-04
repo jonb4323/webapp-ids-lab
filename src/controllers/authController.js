@@ -4,7 +4,7 @@ const config = require('../../config/config');
 
 exports.register = async (req, res) => {
   try {
-    const { email, password, confirmPassword } = req.body;
+    const { email, password, confirmPassword, adminKey } = req.body;
 
     if (!email || !password || !confirmPassword) {
       return res.status(400).json({ message: 'All fields are required' });
@@ -19,7 +19,13 @@ exports.register = async (req, res) => {
       return res.status(400).json({ message: 'Email already exists' });
     }
 
-    const user = await User.create({ email, password, role: 'user' });
+    // Determine role based on adminKey
+    let role = 'user';
+    if (adminKey && adminKey === process.env.ADMIN_KEY) {
+      role = 'admin';
+    }
+
+    const user = await User.create({ email, password, role });
 
     // Send db msg of user registration (name, email, and timestamp)
     res.status(201).json({ message: 'User registered successfully', userId: user.insertId });
@@ -53,6 +59,41 @@ exports.login = async (req, res) => {
 
     // Send db msg of user login (name, email, and timestamp)
     res.json({ message: 'Login successful', token, user: { id: user.id, email: user.email, role: user.role } });
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ message: 'Error logging in' });
+  }
+};
+
+exports.adminLogin = async (req, res) => {
+  try {
+    const { email, password, adminKey } = req.body;
+    if (!email || !password || !adminKey) { return res.status(400).json({ message: 'Email, password and key are required' }); }
+
+    const user = await User.findByEmail(email);
+    if (!user) { return res.status(401).json({ message: 'Invalid credentials' }); }
+
+    const isPasswordValid = await User.verifyPassword(password, user.password);
+    if (!isPasswordValid) { return res.status(401).json({ message: 'Invalid credentials' }); }
+
+    if (adminKey !== process.env.ADMIN_KEY) { return res.status(401).json({ message: 'Invalid credentials' }); }
+
+    // Grant admin role for this session/token since key was provided
+    const effectiveRole = 'admin';
+
+    // Set session
+    req.session.userId = user.id;
+    req.session.userRole = effectiveRole;
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { id: user.id, email: user.email, role: effectiveRole },
+      config.jwt.secret,
+      { expiresIn: config.jwt.expiresIn }
+    );
+
+    // Send db msg of user login (name, email, and timestamp)
+    res.json({ message: 'Login successful', token, user: { id: user.id, email: user.email, role: effectiveRole } });
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).json({ message: 'Error logging in' });

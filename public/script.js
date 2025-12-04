@@ -5,6 +5,7 @@ async function registerUser(event) {
   const email = document.getElementById('register-email').value;
   const password = document.getElementById('register-password').value;
   const confirmPassword = document.getElementById('register-confirm-password').value;
+  const adminKey = document.getElementById('register-admin-key').value;
 
   try {
     const response = await fetch('/auth/register', {
@@ -12,7 +13,7 @@ async function registerUser(event) {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ email, password, confirmPassword })
+      body: JSON.stringify({ email, password, confirmPassword, adminKey })
     });
 
     const data = await response.json();
@@ -24,6 +25,38 @@ async function registerUser(event) {
   } catch (error) {
     console.error('Registration error:', error);
     showAlert('An error occurred during registration', 'error');
+  }
+}
+
+async function loginAdmin(event) {
+  event.preventDefault();
+
+  const email = document.getElementById('login-email').value;
+  const password = document.getElementById('login-password').value;
+  const adminKey = document.getElementById('login-admin-key').value;
+
+  try {
+    const response = await fetch('/auth/admin-login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email, password, adminKey })
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      showAlert('Admin login successful! Redirecting...', 'success');
+      setTimeout(() => window.location.href = '/admin-page.html', 2000);
+    } else {
+      showAlert(data.message || 'Login failed', 'error');
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    showAlert('An error occurred during login', 'error');
   }
 }
 
@@ -47,7 +80,7 @@ async function loginUser(event) {
     if (response.ok) {
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
-      showAlert('Login successful!', 'success');
+      showAlert('Login successful! redirecting to dashboard, please wait...', 'success');
       setTimeout(() => window.location.href = '/dashboard', 2000);
     } else {
       showAlert(data.message || 'Login failed', 'error');
@@ -85,7 +118,6 @@ function displayEmployees(employees) {
   const tbody = document.getElementById('employees-tbody');
 
   if (!tbody) return;
-
   tbody.innerHTML = '';
 
   employees.forEach(employee => {
@@ -195,11 +227,94 @@ function showAlert(message, type) {
   setTimeout(() => alertDiv.remove(), 3000);
 }
 
+// Admin management functions
+async function loadUsers() {
+  const token = localStorage.getItem('token');
+
+  try {
+    const response = await fetch('/api/admin/users', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    if (!response.ok) { throw new Error('Failed to fetch users'); }
+
+    const users = await response.json();
+    displayUsers(users);
+  } catch (error) {
+    console.error('Error loading users:', error);
+    showAlert('Error loading users', 'error');
+  }
+}
+
+function displayUsers(users) {
+  const tbody = document.getElementById('users-tbody');
+  if (!tbody) return;
+
+  tbody.innerHTML = '';
+
+  users.forEach(user => {
+    const row = document.createElement('tr');
+    const isChecked = user.role === 'admin' ? 'checked' : '';
+    const createdDate = new Date(user.created_at).toLocaleDateString();
+    
+    row.innerHTML = `
+      <td>${user.id}</td>
+      <td>${user.email}</td>
+      <td>${user.role}</td>
+      <td>${createdDate}</td>
+      <td>
+        <label class="switch">
+          <input type="checkbox" ${isChecked} onchange="toggleAdminRole(${user.id}, this.checked)">
+          <span class="slider round"></span>
+        </label>
+      </td>
+    `;
+    tbody.appendChild(row);
+  });
+}
+
+async function toggleAdminRole(userId, isAdmin) {
+  const token = localStorage.getItem('token');
+  const newRole = isAdmin ? 'admin' : 'user';
+
+  try {
+    const response = await fetch(`/api/admin/users/${userId}/role`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ role: newRole })
+    });
+
+    if (response.ok) {
+      showAlert(`User role updated to ${newRole}`, 'success');
+      loadUsers(); // Refresh list
+    } else {
+      const data = await response.json();
+      showAlert(data.message || 'Error updating role', 'error');
+      loadUsers(); // Revert toggle on error
+    }
+  } catch (error) {
+    console.error('Error updating role:', error);
+    showAlert('An error occurred', 'error');
+    loadUsers(); // Revert toggle on error
+  }
+}
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
   const path = window.location.pathname;
 
   if (path === '/dashboard') {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user && user.role === 'admin') {
+      const adminBtn = document.getElementById('admin-btn');
+      if (adminBtn) adminBtn.style.display = 'inline-block';
+    }
+  } else if (path === '/admin' || path === '/admin-page.html') {
+    loadUsers();
+  } else if (path === '/employee-list.html') {
     loadEmployees();
   }
 });

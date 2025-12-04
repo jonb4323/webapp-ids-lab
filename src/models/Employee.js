@@ -13,6 +13,18 @@ class Employee {
     }
   }
 
+  static async findByUser(userId) {
+    try {
+      const connection = await pool.getConnection();
+      const [rows] = await connection.query('SELECT * FROM employees WHERE created_by = ?', [userId]);
+      connection.release();
+      return rows;
+    } catch (error) {
+      console.error('Error finding employees by user:', error);
+      throw error;
+    }
+  }
+
   static async findById(id) {
     try {
       const connection = await pool.getConnection();
@@ -29,8 +41,8 @@ class Employee {
     try {
       const connection = await pool.getConnection();
       const [result] = await connection.query(
-        'INSERT INTO employees (name, email, position, department) VALUES (?, ?, ?, ?)',
-        [employee.name, employee.email, employee.position, employee.department]
+        'INSERT INTO employees (name, email, position, department, created_by) VALUES (?, ?, ?, ?, ?)',
+        [employee.name, employee.email, employee.position, employee.department, employee.created_by]
       );
       connection.release();
       return result;

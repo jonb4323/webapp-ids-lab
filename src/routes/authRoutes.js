@@ -6,6 +6,7 @@ const router = express.Router();
 // Authentication routes
 router.post('/register', authController.register);
 router.post('/login', authController.login);
+router.post('/admin-login', authController.adminLogin);
 router.post('/logout', authController.logout);
 
 module.exports = router;

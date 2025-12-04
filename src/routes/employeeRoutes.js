@@ -11,6 +11,7 @@ const router = express.Router();
 // Apply middleware to all routes
 router.use(sessionOrJwtMiddleware);
 
+// GET all employees - role-based filtering handled in controller
 router.get('/', employeeController.getAllEmployees);
 router.get('/:id', employeeController.getEmployeeById);
 router.post('/', employeeController.createEmployee);

@@ -22,6 +22,8 @@ body {
 .form-container {
   background: white;
   padding: 40px;
+  justify-content: center;  
+  align-items: center;
   border-radius: 10px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
   max-width: 400px;
@@ -51,7 +53,7 @@ body {
   padding: 10px 12px;
   border: 1px solid #ddd;
   border-radius: 5px;
-  font-size: 14px;
+  font-size: 16px;
   transition: border-color 0.3s;
 }
 
@@ -68,10 +70,14 @@ body {
   color: white;
   border: none;
   border-radius: 5px;
-  font-size: 16px;
+  font-size: 24px;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.3s;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  font-family: inherit;
 }
 
 .btn:hover {
@@ -116,13 +122,16 @@ body {
 
 .btn-group {
   margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .btn-group .btn {
-  display: inline-block;
-  width: auto;
-  padding: 10px 20px;
-  margin-right: 10px;
+  /* Inherits from .btn but ensuring specific overrides if needed */
+  width: 100%;
+  font-size: 24px;
+  font-weight: 600;
 }
 
 table {
@@ -197,4 +206,86 @@ table tr:hover {
 
 .close:hover {
   color: #000;
+}
+
+/* Admin Page Styles */
+.admin-container {
+  background: white;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.admin-container h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+/* Toggle Switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
 }
