@@ -1,0 +1,25 @@
+sources:
+  system_in:
+    type: vector
+    address: "0.0.0.0:24224"
+
+  traffic_in:
+    type: vector
+    address: "0.0.0.0:24225"
+
+sinks:
+  system_file:
+    type: file
+    inputs:
+      - system_in
+    path: "C:/ids/logs/webapp-system.jsonl"
+    encoding:
+      codec: json
+
+  traffic_file:
+    type: file
+    inputs:
+      - traffic_in
+    path: "C:/ids/logs/webapp-traffic.jsonl"
+    encoding:
+      codec: json
