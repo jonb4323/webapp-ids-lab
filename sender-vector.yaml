@@ -1,0 +1,54 @@
+sources:
+  system_logs_raw:
+    type: file
+    include:
+      - "C:/Users/temp/Desktop/webapp/webapp-ml-ids/syscalls/logs/*.json"
+    read_from: end
+    data_dir: "C:/Users/temp/Desktop/vector/vector-0.52.0-x86_64-pc-windows-msvc/data/system"
+    encoding:
+      charset: utf-8
+
+  traffic_logs_raw:
+    type: file
+    include:
+      - "C:/Users/temp/Desktop/packet-capture/logs/*.jsonl"
+    read_from: end
+    data_dir: "C:/Users/temp/Desktop/vector/vector-0.52.0-x86_64-pc-windows-msvc/data/traffic"
+    encoding:
+      charset: utf-8
+
+transforms:
+  system_parse_and_enrich:
+    type: remap
+    inputs:
+      - system_logs_raw
+    source: |
+      . = parse_json!(.message)
+      .source_host = "webapp-vm"
+      .source_app  = "webapp-ids"
+      .log_type    = "system"
+
+  traffic_parse_and_enrich:
+    type: remap
+    inputs:
+      - traffic_logs_raw
+    source: |
+      . = parse_json!(.message)
+      .source_host = "webapp-vm"
+      .source_app  = "webapp-ids"
+      .log_type    = "traffic"
+
+sinks:
+  send_system:
+    type: vector
+    inputs:
+      - system_parse_and_enrich
+    address: "*.*.*.*:24224" #Enter your Ip and Port to send too
+    version: "2"
+
+  send_traffic:
+    type: vector
+    inputs:
+      - traffic_parse_and_enrich
+    address: "*.*.*.*:24225" #Enter your Ip and Port to send too
+    version: "2"
