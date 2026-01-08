@@ -11,6 +11,14 @@ The packet capture application requires Npcap to be installed on the WebApp Host
 **Overview of the Lab (Layout)**</br>
 ================================================</br>
 
+**Website Application**
+Payroll App
+- User Access Control Roles
+- Access Control Management
+- Uses MySQL for the Database
+- Node.js Backend
+- "npm start" to run
+
 Attacker (Host Machine) </br>
 - Uses the known vulnerbilites.txt to exploit the web app</br>
 
@@ -26,7 +34,7 @@ After the sucessful attack the web app's vulnerbilites were patched according to
 **HOW TO RUN**</br>
 ================================================</br>
 
-1. Clone the repo and install the two Virtual Machines loaded with Window 10 ISO's</br>
+1. Clone the repo install MySQL (for db), and install the two Virtual Machines loaded with Window 10 ISO's</br>
 2. Adjust image file paths to match your local directories</br>
 3. Run the Packet Capture Application and host the live web app locally on the same VLAN (Default port 3000)</br>
 4. Run Vector w/ logging files sender-vector.yaml and reciever-vector.yaml on both VM's to send and recieve the live logs and traffic over the network</br>
