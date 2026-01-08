@@ -18,7 +18,7 @@ Attacker (Host Machine) </br>
 VM #1 (Web App Hosted) </br>
 - Sends System Logs and Traffic Logs over the network using Vector</br>
 VM #2 (Intrusion Detection System Hosted)</br>
-- IDS parses the logs with the nlohmann c++ json reader and checks using predefined rules and deveation from normal behaviour</br>
+- IDS parses the logs with the nlohmann c++ json reader and checks using predefined rules and deviation from normal behaviour</br>
 
 After the sucessful attack the web app's vulnerbilites were patched according to the OWASP Top 10 </br>
 
