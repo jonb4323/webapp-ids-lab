@@ -1,0 +1,11 @@
+Vulnerabilites for Web App (Known)
+
+Can be attacked from any user perspective 
+- No hashing when storing password in db 
+- Different user updatingg other user inforrmation by just knowing fields 
+- Using get to login and the login credentials are sent in the url (Fix using POST)
+- Being able to redirect based off the url (can jump straight to admin page)
+- SQL Injection to pull users from database
+
+Can be attacked only from ADMIN perspective
+- Mass deleting users in admin portal w/ verification 
