@@ -8,7 +8,7 @@ This project is a simple payroll web app, with added real security vulnerabiliti
 The packet capture application requires Npcap to be installed on the WebApp Host to ensure it runs correctly.
 
 ================================================
-***Overview of the Lab (Layout)***
+**Overview of the Lab (Layout)**
 ================================================
 
 Attacker (Host Machine) 
@@ -23,7 +23,7 @@ VM #2 (Intrusion Detection System Hosted)
 After the sucessful attack the web app's vulnerbilites were patched according to the OWASP Top 10 
 
 ================================================
-***HOW TO RUN***
+**HOW TO RUN**
 ================================================
 
 1. Clone the repo and install the two Virtual Machines loaded with Window 10 ISO's
