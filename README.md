@@ -29,5 +29,5 @@ After the sucessful attack the web app's vulnerbilites were patched according to
 1. Clone the repo and install the two Virtual Machines loaded with Window 10 ISO's</br>
 2. Adjust image file paths to match your local directories</br>
 3. Run the Packet Capture Application and host the live web app locally on the same VLAN (Default port 3000)</br>
-4. Run the vector logging files sender and reciever on both VM's to send the live logs and traffic over the network</br>
+4. Run Vector w/ logging files sender-vector.yaml and reciever-vector.yaml on both VM's to send and recieve the live logs and traffic over the network</br>
 5. Run the IDS and enjoy having a safe Website Application :)</br>
