@@ -39,3 +39,8 @@ After the sucessful attack the web app's vulnerbilites were patched according to
 3. Run the Packet Capture Application and host the live web app locally on the same VLAN (Default port 3000)</br>
 4. Run Vector w/ logging files sender-vector.yaml and reciever-vector.yaml on both VM's to send and recieve the live logs and traffic over the network</br>
 5. Run the IDS and enjoy having a safe Website Application :)</br>
+
+**Future Improvements & Additions**
+- Implement a machine learning model (using logistic regression) into the IDS for increased robustness
+- Host the webapp in a container or VM Instance (either AWS or Docker)
+
