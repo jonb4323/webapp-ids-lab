@@ -2,7 +2,7 @@
 
 This project is a simple payroll web app, with added real security vulnerabilities, then exploit them, patch the issues, with implemented detailed logging, and a ML-based intrusion detection system (IDS) using normal and attack traffic logs.
 
-**VIDEO DEMO/BREAKDOWN**:[(Coming Soon...)]</br>
+**VIDEO DEMO/BREAKDOWN**:[(https://youtu.be/m2TtPDvNrCY)]</br>
 
 ***IMPORTANT***</br>
 The packet capture application requires Npcap to be installed on the WebApp Host to ensure it runs correctly.</br>
